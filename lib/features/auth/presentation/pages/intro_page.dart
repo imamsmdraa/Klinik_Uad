@@ -15,7 +15,7 @@ class IntroPage extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/intro.jpg',
+            'assets/background/background.png',
             fit: BoxFit.cover,
             alignment: Alignment.center,
           ),
@@ -65,7 +65,8 @@ class IntroPage extends StatelessWidget {
                   const SizedBox(height: 12),
                   Center(
                     child: TextButton(
-                      onPressed: () => Navigator.pushNamed(context, '/login'),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/register'),
                       child: const Text(
                         'Create Account',
                         style: TextStyle(color: Colors.white, fontSize: 14),

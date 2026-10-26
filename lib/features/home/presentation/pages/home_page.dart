@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_shadows.dart';
@@ -6,7 +8,6 @@ import '../../../../shared/widgets/app_dialogs.dart';
 import '../../../../shared/widgets/responsive_layout.dart';
 import '../../../../shared/widgets/status_badge.dart';
 import '../../../appointment/presentation/pages/booking_page.dart';
-import '../../../appointment/presentation/pages/queue_page.dart';
 import '../../../consultation/presentation/pages/consultation_page.dart';
 import '../../../medical_record/presentation/pages/medical_record_page.dart';
 import '../../../profile/presentation/pages/digital_medical_card_page.dart';
@@ -88,199 +89,53 @@ class _HomeOverview extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: CustomScrollView(
         slivers: [
-          // Header with curved background and Greeting
           SliverToBoxAdapter(
-            child: _WelcomeHeader(
-              onProfileTap: () => onNavigateToTab(4),
+            child: _ReferenceHomeHeader(
               onNotificationTap: () => onNavigateToTab(3),
+              onProfileTap: () => onNavigateToTab(4),
             ),
           ),
-
-          // Main Dashboard Content
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+            padding: const EdgeInsets.fromLTRB(16, 18, 16, 32),
             sliver: SliverList(
               delegate: SliverChildListDelegate([
-                // Current Queue / Appointment Card
-                _QueueCard(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const QueuePage()),
-                    );
-                  },
+                _ReferenceHeroCard(onTap: onBookAppointment),
+                const SizedBox(height: 28),
+                _ReferenceSectionTitle(
+                  title: 'Tips & Articles',
+                  action: 'Explore',
+                  onTap: () => AppSnackBar.showInfo(
+                    context,
+                    'Artikel kesehatan Klinik UAD',
+                  ),
                 ),
-                const SizedBox(height: 38),
-
-                // Quick Access Section
-                SectionHeader(
-                  title: 'Quick access',
-                  actionLabel: 'See all',
-                  onActionPressed: () {
-                    AppSnackBar.showInfo(context, 'Semua layanan Klinik UAD');
-                  },
+                const SizedBox(height: 14),
+                const _ArticleRow(),
+                const SizedBox(height: 28),
+                _ReferenceSectionTitle(
+                  title: 'Today’s Summary',
+                  action: 'See all',
+                  onTap: () => onNavigateToTab(2),
                 ),
-                const SizedBox(height: 12),
-                _QuickAccessGrid(
+                const SizedBox(height: 14),
+                const _SummaryRow(),
+                const SizedBox(height: 24),
+                const _HealthChartGrid(),
+                const SizedBox(height: 24),
+                _LegacyQuickAccess(
                   onBookAppointment: onBookAppointment,
                   onMedicalRecord: () => onNavigateToTab(2),
                   onMedication: () => onNavigateToTab(3),
-                  onConsultation: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const ConsultationPage(),
-                      ),
-                    );
-                  },
-                  onDigitalCard: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const DigitalMedicalCardPage(),
-                      ),
-                    );
-                  },
+                  onConsultation: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const ConsultationPage()),
+                  ),
+                  onDigitalCard: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const DigitalMedicalCardPage(),
+                    ),
+                  ),
                   onHealthProfile: () => onNavigateToTab(4),
                 ),
-                const SizedBox(height: 28),
-
-                // Medication Reminder Banner
-                SectionHeader(
-                  title: 'Upcoming reminder',
-                  actionLabel: 'Details',
-                  onActionPressed: () => onNavigateToTab(3),
-                ),
-                const SizedBox(height: 10),
-                _MedicationReminderCard(onTap: () => onNavigateToTab(3)),
-                const SizedBox(height: 28),
-
-                // Health Statistics (Apple Health / Google Fit inspired)
-                Text(
-                  'Your health',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.3,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Sinkronisasi biometrik harian kampus',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: HealthStatCard(
-                        title: 'Detak Jantung',
-                        value: '72',
-                        unit: 'bpm',
-                        icon: Icons.favorite_rounded,
-                        color: AppColors.danger,
-                        trend: 'Normal',
-                        isPositive: true,
-                        onTap: () {
-                          AppSnackBar.showInfo(
-                            context,
-                            'Detak jantung istirahat 72 bpm',
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: HealthStatCard(
-                        title: 'Langkah Kaki',
-                        value: '6.420',
-                        unit: 'langkah',
-                        icon: Icons.directions_walk_rounded,
-                        color: AppColors.primary,
-                        trend: '+12%',
-                        isPositive: true,
-                        onTap: () {
-                          AppSnackBar.showInfo(
-                            context,
-                            'Target langkah 8.000 langkah/hari',
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: HealthStatCard(
-                        title: 'Tidur Semalam',
-                        value: '7.5',
-                        unit: 'jam',
-                        icon: Icons.bedtime_rounded,
-                        color: const Color(0xFF5E35B1),
-                        trend: 'Cukup',
-                        isPositive: true,
-                        onTap: () {
-                          AppSnackBar.showInfo(
-                            context,
-                            'Kualitas tidur optimal',
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: HealthStatCard(
-                        title: 'Konsumsi Air',
-                        value: '1.8',
-                        unit: 'liter',
-                        icon: Icons.water_drop_rounded,
-                        color: AppColors.accent,
-                        trend: '72%',
-                        isPositive: true,
-                        onTap: () {
-                          AppSnackBar.showInfo(context, 'Target hidrasi 2.5 L');
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 28),
-
-                // Health Education / Tips Section
-                const SectionHeader(
-                  title: 'Tips Sehat Kampus',
-                  subtitle: 'Edukasi dan panduan kesehatan dari dokter UAD',
-                ),
-                const SizedBox(height: 12),
-                _HealthArticleCard(
-                  category: 'Gaya Hidup Sehat',
-                  title:
-                      '5 Tips Menjaga Imunitas saat Musim Ujian Semester di Kampus',
-                  readTime: '3 mnt baca',
-                  date: '18 Okt 2026',
-                  onTap: () {
-                    AppSnackBar.showInfo(
-                      context,
-                      'Membuka artikel edukasi kesehatan...',
-                    );
-                  },
-                ),
-                const SizedBox(height: 12),
-                _HealthArticleCard(
-                  category: 'Layanan Kampus',
-                  title:
-                      'Pemeriksaan Gigi Rutin & Scaling Gratis bagi Mahasiswa UAD',
-                  readTime: '2 mnt baca',
-                  date: '15 Okt 2026',
-                  onTap: () {
-                    AppSnackBar.showInfo(
-                      context,
-                      'Membuka artikel edukasi kesehatan...',
-                    );
-                  },
-                ),
-                const SizedBox(height: 20),
               ]),
             ),
           ),
@@ -288,6 +143,529 @@ class _HomeOverview extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ReferenceHomeHeader extends StatelessWidget {
+  const _ReferenceHomeHeader({
+    required this.onNotificationTap,
+    required this.onProfileTap,
+  });
+
+  final VoidCallback onNotificationTap;
+  final VoidCallback onProfileTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 22, 20, 4),
+      child: Row(
+        children: [
+          Image.asset('assets/icon/logo_klinik_uad.png', width: 48, height: 48),
+          const SizedBox(width: 10),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'KLINIK UAD',
+                  style: TextStyle(
+                    color: AppColors.success,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+                Text(
+                  'Layanan kesehatan kampus',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 11,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            onPressed: onNotificationTap,
+            icon: const Icon(
+              Icons.notifications_none_rounded,
+              size: 29,
+              color: AppColors.primaryDark,
+            ),
+            tooltip: 'Notifikasi',
+          ),
+          GestureDetector(
+            onTap: onProfileTap,
+            child: const CircleAvatar(
+              radius: 22,
+              backgroundColor: AppColors.primaryContainer,
+              child: Text(
+                'AN',
+                style: TextStyle(
+                  color: AppColors.primaryDark,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReferenceHeroCard extends StatelessWidget {
+  const _ReferenceHeroCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(28),
+      child: SizedBox(
+        height: 212,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset('assets/background/background.png', fit: BoxFit.cover),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primaryDark.withAlpha(220),
+                    AppColors.primary.withAlpha(45),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(26, 28, 20, 18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Hello, Ahmad',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 29,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Here’s your daily health snapshot.',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      _HeroTag(label: 'Klinik UAD', onTap: onTap),
+                      const SizedBox(width: 8),
+                      const _HeroTag(label: 'Good Health'),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [_Dot(active: true), _Dot(), _Dot()],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HeroTag extends StatelessWidget {
+  const _HeroTag({required this.label, this.onTap});
+
+  final String label;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(20),
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white70),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    ),
+  );
+}
+
+class _Dot extends StatelessWidget {
+  const _Dot({this.active = false});
+
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    margin: const EdgeInsets.symmetric(horizontal: 3),
+    width: 16,
+    height: 16,
+    decoration: BoxDecoration(
+      color: active ? Colors.white : Colors.white70,
+      shape: BoxShape.circle,
+    ),
+  );
+}
+
+class _ReferenceSectionTitle extends StatelessWidget {
+  const _ReferenceSectionTitle({
+    required this.title,
+    required this.action,
+    required this.onTap,
+  });
+
+  final String title;
+  final String action;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        title,
+        style: const TextStyle(
+          color: AppColors.primaryDark,
+          fontSize: 24,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+      TextButton(
+        onPressed: onTap,
+        child: Text(
+          action,
+          style: const TextStyle(
+            color: AppColors.success,
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+class _ArticleRow extends StatelessWidget {
+  const _ArticleRow();
+
+  @override
+  Widget build(BuildContext context) => const Row(
+    children: [
+      Expanded(
+        child: _ArticleCard(
+          title: 'Start your day right',
+          subtitle: '3 min read • Nutrition',
+        ),
+      ),
+      SizedBox(width: 14),
+      Expanded(
+        child: _ArticleCard(
+          title: '5-min breathing',
+          subtitle: '2 min read • Mindfulness',
+        ),
+      ),
+    ],
+  );
+}
+
+class _ArticleCard extends StatelessWidget {
+  const _ArticleCard({required this.title, required this.subtitle});
+
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    clipBehavior: Clip.antiAlias,
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColors.border),
+    ),
+    child: Column(
+      children: [
+        Image.asset(
+          'assets/background/background.png',
+          height: 108,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          alignment: Alignment.center,
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 12),
+          child: Column(
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.primaryDark,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _SummaryRow extends StatelessWidget {
+  const _SummaryRow();
+
+  @override
+  Widget build(BuildContext context) => const Row(
+    children: [
+      Expanded(
+        child: _SummaryItem(
+          value: '72',
+          label: 'Heart Rate',
+          color: AppColors.success,
+        ),
+      ),
+      SizedBox(width: 12),
+      Expanded(
+        child: _SummaryItem(
+          value: '92%',
+          label: 'Sleep Score',
+          color: Color(0xFF62C6EC),
+        ),
+      ),
+      SizedBox(width: 12),
+      Expanded(
+        child: _SummaryItem(
+          value: 'Low',
+          label: 'Stress',
+          color: Color(0xFFFFB23F),
+        ),
+      ),
+    ],
+  );
+}
+
+class _SummaryItem extends StatelessWidget {
+  const _SummaryItem({
+    required this.value,
+    required this.label,
+    required this.color,
+  });
+
+  final String value;
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(vertical: 16),
+    decoration: BoxDecoration(
+      color: const Color(0xFFE9F7FA),
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(color: AppColors.borderLight),
+    ),
+    child: Column(
+      children: [
+        CircleAvatar(
+          radius: 31,
+          backgroundColor: color,
+          child: Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: AppColors.textSecondary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+class _HealthChartGrid extends StatelessWidget {
+  const _HealthChartGrid();
+
+  @override
+  Widget build(BuildContext context) => GridView.count(
+    crossAxisCount: 2,
+    mainAxisSpacing: 14,
+    crossAxisSpacing: 14,
+    childAspectRatio: 1.25,
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    children: const [
+      _HealthChart(
+        title: 'Heart Rate',
+        value: '72 bpm',
+        icon: Icons.monitor_heart_outlined,
+      ),
+      _HealthChart(
+        title: 'Sleep',
+        value: '7h 45m',
+        icon: Icons.nightlight_outlined,
+      ),
+      _HealthChart(
+        title: 'BP & SpO₂',
+        value: '118/76',
+        icon: Icons.favorite_border_rounded,
+      ),
+      _HealthChart(
+        title: 'Stress',
+        value: 'Low',
+        icon: Icons.psychology_outlined,
+      ),
+    ],
+  );
+}
+
+class _HealthChart extends StatelessWidget {
+  const _HealthChart({
+    required this.title,
+    required this.value,
+    required this.icon,
+  });
+
+  final String title;
+  final String value;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.fromLTRB(18, 14, 14, 12),
+    decoration: BoxDecoration(
+      color: const Color(0xFFE9F7FA),
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: const Color(0xFFD4DDE0)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Icon(icon, color: AppColors.primaryDark, size: 26),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: const TextStyle(
+            color: AppColors.primaryDark,
+            fontSize: 26,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const Spacer(),
+        const _BarChart(),
+      ],
+    ),
+  );
+}
+
+class _BarChart extends StatelessWidget {
+  const _BarChart();
+
+  @override
+  Widget build(BuildContext context) => Row(
+    crossAxisAlignment: CrossAxisAlignment.end,
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [34, 24, 42, 48, 34, 24, 40]
+        .map(
+          (height) => Container(
+            width: 18,
+            height: height.toDouble(),
+            decoration: const BoxDecoration(
+              color: Color(0xFF4CAF50),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+            ),
+          ),
+        )
+        .toList(),
+  );
+}
+
+class _LegacyQuickAccess extends StatelessWidget {
+  const _LegacyQuickAccess({
+    required this.onBookAppointment,
+    required this.onMedicalRecord,
+    required this.onMedication,
+    required this.onConsultation,
+    required this.onDigitalCard,
+    required this.onHealthProfile,
+  });
+
+  final VoidCallback onBookAppointment;
+  final VoidCallback onMedicalRecord;
+  final VoidCallback onMedication;
+  final VoidCallback onConsultation;
+  final VoidCallback onDigitalCard;
+  final VoidCallback onHealthProfile;
+
+  @override
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'Quick access',
+        style: TextStyle(
+          color: AppColors.primaryDark,
+          fontSize: 22,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+      const SizedBox(height: 12),
+      _QuickAccessGrid(
+        onBookAppointment: onBookAppointment,
+        onMedicalRecord: onMedicalRecord,
+        onMedication: onMedication,
+        onConsultation: onConsultation,
+        onDigitalCard: onDigitalCard,
+        onHealthProfile: onHealthProfile,
+      ),
+    ],
+  );
 }
 
 class _WelcomeHeader extends StatelessWidget {

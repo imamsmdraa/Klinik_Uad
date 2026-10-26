@@ -26,18 +26,35 @@ void main() {
     expect(find.text('Login to your account'), findsOneWidget);
   });
 
+  testWidgets('menampilkan dan memvalidasi register Klinik UAD', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const MyApp());
+
+    await tester.tap(find.text('Create Account'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Register'), findsWidgets);
+    expect(find.text('Create your new account'), findsOneWidget);
+    expect(find.text('Confirm Password'), findsOneWidget);
+    expect(find.text('Or continue with'), findsOneWidget);
+
+    await tester.tap(find.text('Register').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Nama lengkap wajib diisi'), findsOneWidget);
+  });
+
   testWidgets('menampilkan beranda Klinik UAD', (tester) async {
     await tester.pumpWidget(const MyApp());
     await openHome(tester);
 
-    expect(find.text('Klinik UAD'), findsOneWidget);
-    expect(find.text('Ahmad Nur Hidayat'), findsOneWidget);
-    expect(find.text('General Consultation'), findsOneWidget);
+    expect(find.text('KLINIK UAD'), findsOneWidget);
+    expect(find.text('Hello, Ahmad'), findsOneWidget);
 
     await tester.drag(find.byType(CustomScrollView), const Offset(0, -300));
     await tester.pumpAndSettle();
 
-    expect(find.text('Quick access'), findsOneWidget);
+    expect(find.text('Tips & Articles'), findsOneWidget);
   });
 
   testWidgets('navigasi bawah berpindah ke janji', (tester) async {

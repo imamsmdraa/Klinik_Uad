@@ -61,6 +61,9 @@ flutter:
   assets:
     - assets/intro.jpg
     - assets/login.jpg
+    - assets/background/background.png
+    - assets/background/home_page_design.png
+    - assets/icon/logo_klinik_uad.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

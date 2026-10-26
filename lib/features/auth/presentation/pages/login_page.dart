@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_spacing.dart';
 import '../../../../shared/widgets/clinic_logo.dart';
+import '../widgets/auth_field.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -41,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
             child: ClipPath(
               clipper: _HeroCurveClipper(),
               child: Image.asset(
-                'assets/login.jpg',
+                'assets/background/background.png',
                 fit: BoxFit.cover,
                 alignment: Alignment.topCenter,
               ),
@@ -93,16 +94,16 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  _LoginField(
+                  AuthField(
                     controller: _usernameController,
-                    hintText: 'Username',
+                    hintText: 'Username ',
                     icon: Icons.person_outline_rounded,
                     validator: (value) => value == null || value.trim().isEmpty
                         ? 'Username wajib diisi'
                         : null,
                   ),
                   const SizedBox(height: 10),
-                  _LoginField(
+                  AuthField(
                     controller: _passwordController,
                     hintText: 'Password',
                     icon: Icons.lock_outline_rounded,
@@ -187,8 +188,7 @@ class _LoginPageState extends State<LoginPage> {
                         style: TextStyle(color: AppColors.textSecondary),
                       ),
                       GestureDetector(
-                        onTap: () =>
-                            _showMessage('Pendaftaran akun segera tersedia'),
+                        onTap: () => Navigator.pushNamed(context, '/register'),
                         child: const Text(
                           'Sign up',
                           style: TextStyle(
@@ -213,50 +213,6 @@ class _LoginPageState extends State<LoginPage> {
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(message)));
-  }
-}
-
-class _LoginField extends StatelessWidget {
-  const _LoginField({
-    required this.controller,
-    required this.hintText,
-    required this.icon,
-    required this.validator,
-    this.obscureText = false,
-    this.suffixIcon,
-  });
-
-  final TextEditingController controller;
-  final String hintText;
-  final IconData icon;
-  final String? Function(String?) validator;
-  final bool obscureText;
-  final Widget? suffixIcon;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      validator: validator,
-      style: const TextStyle(color: AppColors.primaryDark, fontSize: 16),
-      decoration: InputDecoration(
-        hintText: hintText,
-        prefixIcon: Icon(icon, color: AppColors.primaryDark),
-        suffixIcon: suffixIcon,
-        filled: true,
-        fillColor: const Color(0xFFD8E1DF),
-        contentPadding: const EdgeInsets.symmetric(vertical: 18),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
-          borderSide: BorderSide.none,
-        ),
-      ),
-    );
   }
 }
 

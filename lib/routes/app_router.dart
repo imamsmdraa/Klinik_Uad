@@ -9,10 +9,12 @@ import '../features/profile/presentation/pages/profile_page.dart';
 import '../features/reminder/presentation/pages/medication_reminder_page.dart';
 import '../features/auth/presentation/pages/intro_page.dart';
 import '../features/auth/presentation/pages/login_page.dart';
+import '../features/auth/presentation/pages/register_page.dart';
 
 abstract final class AppRouter {
   static const intro = '/intro';
   static const login = '/login';
+  static const register = '/register';
   static const home = '/';
   static const booking = '/booking';
   static const queue = '/queue';
@@ -25,6 +27,7 @@ abstract final class AppRouter {
   static final routes = <String, WidgetBuilder>{
     intro: (_) => const IntroPage(),
     login: (_) => const LoginPage(),
+    register: (_) => const RegisterPage(),
     home: (_) => const HomePage(),
     booking: (_) => const BookingPage(),
     queue: (_) => const QueuePage(),

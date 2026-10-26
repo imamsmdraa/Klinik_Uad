@@ -10,16 +10,16 @@ import 'package:flutter/material.dart';
 /// - Status: Success (#43A047), Warning (#FFC107), Danger (#EF5350)
 abstract final class AppColors {
   // Brand Colors
-  static const Color primary = Color(0xFF1565C0);
-  static const Color primaryDark = Color(0xFF0D47A1);
-  static const Color primaryLight = Color(0xFF1976D2);
-  static const Color primaryContainer = Color(0xFFE3F2FD);
+  static const Color primary = Color(0xFF2E8B3C);
+  static const Color primaryDark = Color(0xFF064E3B);
+  static const Color primaryLight = Color(0xFF4CAF50);
+  static const Color primaryContainer = Color(0xFFE6F4E8);
   static const Color onPrimary = Colors.white;
-  static const Color onPrimaryContainer = Color(0xFF1B5E20);
+  static const Color onPrimaryContainer = Color(0xFF064E3B);
 
   // Secondary & Accent
-  static const Color secondary = Color(0xFF42A5F5);
-  static const Color secondaryContainer = Color(0xFFEAF4FE);
+  static const Color secondary = Color(0xFF66BB6A);
+  static const Color secondaryContainer = Color(0xFFEAF6EB);
   static const Color accent = Color(0xFF26A69A);
   static const Color accentContainer = Color(0xFFE0F2F1);
   static const Color onAccent = Color(0xFF00695C);

@@ -16,6 +16,15 @@ class ClinicLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (backgroundColor == Colors.transparent) {
+      return Image.asset(
+        'assets/icon/logo_klinik_uad.png',
+        width: size,
+        height: size,
+        fit: BoxFit.contain,
+      );
+    }
+
     return Container(
       width: size,
       height: size,
