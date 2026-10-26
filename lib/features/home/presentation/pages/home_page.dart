@@ -1,4 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../../../shared/theme/app_colors.dart';
+import '../../../../shared/theme/app_shadows.dart';
+import '../../../../shared/widgets/app_cards.dart';
+import '../../../../shared/widgets/app_dialogs.dart';
+import '../../../../shared/widgets/responsive_layout.dart';
+import '../../../../shared/widgets/status_badge.dart';
+import '../../../appointment/presentation/pages/booking_page.dart';
+import '../../../appointment/presentation/pages/queue_page.dart';
+import '../../../consultation/presentation/pages/consultation_page.dart';
+import '../../../medical_record/presentation/pages/medical_record_page.dart';
+import '../../../profile/presentation/pages/digital_medical_card_page.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
+import '../../../reminder/presentation/pages/medication_reminder_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,223 +23,867 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
 
-  static const _destinations = [
-    NavigationDestination(
-      icon: Icon(Icons.home_outlined),
-      selectedIcon: Icon(Icons.home),
-      label: 'Beranda',
+  static const List<NavigationItemData> _navItems = [
+    NavigationItemData(
+      icon: Icons.home_outlined,
+      selectedIcon: Icons.home_rounded,
+      label: 'Home',
     ),
-    NavigationDestination(
-      icon: Icon(Icons.calendar_month_outlined),
-      selectedIcon: Icon(Icons.calendar_month),
-      label: 'Janji',
+    NavigationItemData(
+      icon: Icons.calendar_month_outlined,
+      selectedIcon: Icons.calendar_month_rounded,
+      label: 'Appointments',
     ),
-    NavigationDestination(
-      icon: Icon(Icons.receipt_long_outlined),
-      selectedIcon: Icon(Icons.receipt_long),
-      label: 'Riwayat',
+    NavigationItemData(
+      icon: Icons.receipt_long_outlined,
+      selectedIcon: Icons.receipt_long_rounded,
+      label: 'Records',
     ),
-    NavigationDestination(
-      icon: Icon(Icons.person_outline),
-      selectedIcon: Icon(Icons.person),
-      label: 'Profil',
+    NavigationItemData(
+      icon: Icons.notifications_none_outlined,
+      selectedIcon: Icons.notifications_rounded,
+      label: 'Alerts',
+    ),
+    NavigationItemData(
+      icon: Icons.person_outline_rounded,
+      selectedIcon: Icons.person_rounded,
+      label: 'Profile',
     ),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Klinik UAD'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            tooltip: 'Notifikasi',
-            icon: const Icon(Icons.notifications_none),
-          ),
-        ],
-      ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          _HomeOverview(onBookAppointment: () => setState(() {
-                _selectedIndex = 1;
-              })),
-          const _ComingSoonPage(
-            icon: Icons.calendar_month,
-            title: 'Janji pemeriksaan',
-          ),
-          const _ComingSoonPage(
-            icon: Icons.receipt_long,
-            title: 'Riwayat kunjungan',
-          ),
-          const _ComingSoonPage(
-            icon: Icons.person,
-            title: 'Profil kesehatan',
-          ),
-        ],
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: _selectedIndex,
-        destinations: _destinations,
-        onDestinationSelected: (index) {
-          setState(() => _selectedIndex = index);
-        },
-      ),
-    );
-  }
-}
-
-class _HomeOverview extends StatelessWidget {
-  const _HomeOverview({required this.onBookAppointment});
-
-  final VoidCallback onBookAppointment;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-
-    return ListView(
-      padding: const EdgeInsets.all(20),
+    return ResponsiveNavigationScaffold(
+      currentIndex: _selectedIndex,
+      onNavigationIndexChanged: (index) {
+        setState(() => _selectedIndex = index);
+      },
+      items: _navItems,
       children: [
-        Text(
-          'Halo, Pasien Klinik UAD',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+        _HomeOverview(
+          onBookAppointment: () => setState(() => _selectedIndex = 1),
+          onNavigateToTab: (index) => setState(() => _selectedIndex = index),
         ),
-        const SizedBox(height: 6),
-        Text(
-          'Kelola kebutuhan kesehatan kampus dengan mudah.',
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 20),
-        Card(
-          color: scheme.primary,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Butuh pemeriksaan?',
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: scheme.onPrimary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Buat janji dengan dokter pilihan Anda.',
-                  style: TextStyle(color: scheme.onPrimary.withAlpha(220)),
-                ),
-                const SizedBox(height: 16),
-                FilledButton.tonal(
-                  onPressed: onBookAppointment,
-                  child: const Text('Booking dokter'),
-                ),
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          'Layanan utama',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-        const SizedBox(height: 12),
-        GridView.count(
-          crossAxisCount: 2,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 1.45,
-          children: const [
-            _ServiceCard(
-              icon: Icons.qr_code_2,
-              title: 'Kartu berobat',
-              subtitle: 'QR check-in',
-            ),
-            _ServiceCard(
-              icon: Icons.medical_information_outlined,
-              title: 'Rekam medis',
-              subtitle: 'Riwayat kesehatan',
-            ),
-            _ServiceCard(
-              icon: Icons.alarm_outlined,
-              title: 'Pengingat',
-              subtitle: 'Obat & kontrol',
-            ),
-            _ServiceCard(
-              icon: Icons.support_agent,
-              title: 'Konseling',
-              subtitle: 'Bantuan psikologis',
-            ),
-          ],
-        ),
+        const BookingPage(),
+        const MedicalRecordPage(),
+        const MedicationReminderPage(),
+        const ProfilePage(),
       ],
     );
   }
 }
 
-class _ServiceCard extends StatelessWidget {
-  const _ServiceCard({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
+class _HomeOverview extends StatelessWidget {
+  const _HomeOverview({
+    required this.onBookAppointment,
+    required this.onNavigateToTab,
   });
 
-  final IconData icon;
-  final String title;
-  final String subtitle;
+  final VoidCallback onBookAppointment;
+  final ValueChanged<int> onNavigateToTab;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(height: 8),
-            Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
-          ],
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: CustomScrollView(
+        slivers: [
+          // Header with curved background and Greeting
+          SliverToBoxAdapter(
+            child: _WelcomeHeader(
+              onProfileTap: () => onNavigateToTab(4),
+              onNotificationTap: () => onNavigateToTab(3),
+            ),
+          ),
+
+          // Main Dashboard Content
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                // Current Queue / Appointment Card
+                _QueueCard(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const QueuePage()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 38),
+
+                // Quick Access Section
+                SectionHeader(
+                  title: 'Quick access',
+                  actionLabel: 'See all',
+                  onActionPressed: () {
+                    AppSnackBar.showInfo(context, 'Semua layanan Klinik UAD');
+                  },
+                ),
+                const SizedBox(height: 12),
+                _QuickAccessGrid(
+                  onBookAppointment: onBookAppointment,
+                  onMedicalRecord: () => onNavigateToTab(2),
+                  onMedication: () => onNavigateToTab(3),
+                  onConsultation: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const ConsultationPage(),
+                      ),
+                    );
+                  },
+                  onDigitalCard: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const DigitalMedicalCardPage(),
+                      ),
+                    );
+                  },
+                  onHealthProfile: () => onNavigateToTab(4),
+                ),
+                const SizedBox(height: 28),
+
+                // Medication Reminder Banner
+                SectionHeader(
+                  title: 'Upcoming reminder',
+                  actionLabel: 'Details',
+                  onActionPressed: () => onNavigateToTab(3),
+                ),
+                const SizedBox(height: 10),
+                _MedicationReminderCard(onTap: () => onNavigateToTab(3)),
+                const SizedBox(height: 28),
+
+                // Health Statistics (Apple Health / Google Fit inspired)
+                Text(
+                  'Your health',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Sinkronisasi biometrik harian kampus',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: HealthStatCard(
+                        title: 'Detak Jantung',
+                        value: '72',
+                        unit: 'bpm',
+                        icon: Icons.favorite_rounded,
+                        color: AppColors.danger,
+                        trend: 'Normal',
+                        isPositive: true,
+                        onTap: () {
+                          AppSnackBar.showInfo(
+                            context,
+                            'Detak jantung istirahat 72 bpm',
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: HealthStatCard(
+                        title: 'Langkah Kaki',
+                        value: '6.420',
+                        unit: 'langkah',
+                        icon: Icons.directions_walk_rounded,
+                        color: AppColors.primary,
+                        trend: '+12%',
+                        isPositive: true,
+                        onTap: () {
+                          AppSnackBar.showInfo(
+                            context,
+                            'Target langkah 8.000 langkah/hari',
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: HealthStatCard(
+                        title: 'Tidur Semalam',
+                        value: '7.5',
+                        unit: 'jam',
+                        icon: Icons.bedtime_rounded,
+                        color: const Color(0xFF5E35B1),
+                        trend: 'Cukup',
+                        isPositive: true,
+                        onTap: () {
+                          AppSnackBar.showInfo(
+                            context,
+                            'Kualitas tidur optimal',
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: HealthStatCard(
+                        title: 'Konsumsi Air',
+                        value: '1.8',
+                        unit: 'liter',
+                        icon: Icons.water_drop_rounded,
+                        color: AppColors.accent,
+                        trend: '72%',
+                        isPositive: true,
+                        onTap: () {
+                          AppSnackBar.showInfo(context, 'Target hidrasi 2.5 L');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 28),
+
+                // Health Education / Tips Section
+                const SectionHeader(
+                  title: 'Tips Sehat Kampus',
+                  subtitle: 'Edukasi dan panduan kesehatan dari dokter UAD',
+                ),
+                const SizedBox(height: 12),
+                _HealthArticleCard(
+                  category: 'Gaya Hidup Sehat',
+                  title:
+                      '5 Tips Menjaga Imunitas saat Musim Ujian Semester di Kampus',
+                  readTime: '3 mnt baca',
+                  date: '18 Okt 2026',
+                  onTap: () {
+                    AppSnackBar.showInfo(
+                      context,
+                      'Membuka artikel edukasi kesehatan...',
+                    );
+                  },
+                ),
+                const SizedBox(height: 12),
+                _HealthArticleCard(
+                  category: 'Layanan Kampus',
+                  title:
+                      'Pemeriksaan Gigi Rutin & Scaling Gratis bagi Mahasiswa UAD',
+                  readTime: '2 mnt baca',
+                  date: '15 Okt 2026',
+                  onTap: () {
+                    AppSnackBar.showInfo(
+                      context,
+                      'Membuka artikel edukasi kesehatan...',
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+              ]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WelcomeHeader extends StatelessWidget {
+  const _WelcomeHeader({
+    required this.onProfileTap,
+    required this.onNotificationTap,
+  });
+
+  final VoidCallback onProfileTap;
+  final VoidCallback onNotificationTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 40),
+      decoration: const BoxDecoration(
+        color: AppColors.primaryContainer,
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(40)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Top Bar: Logo & Avatar
+          Row(
+            children: [
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: AppShadows.subtle,
+                ),
+                child: const Icon(
+                  Icons.local_hospital_rounded,
+                  color: Colors.white,
+                  size: 25,
+                ),
+              ),
+              const SizedBox(width: 13),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Klinik UAD',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  const Text(
+                    'Universitas Ahmad Dahlan',
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              // Profile Avatar with Status Dot
+              InkWell(
+                onTap: onProfileTap,
+                borderRadius: BorderRadius.circular(29),
+                child: Container(
+                  width: 58,
+                  height: 58,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xFF8AC792),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      const Text(
+                        'AN',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        bottom: 2,
+                        child: Container(
+                          width: 12,
+                          height: 12,
+                          decoration: BoxDecoration(
+                            color: AppColors.primary,
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AppColors.primaryContainer,
+                              width: 2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 35),
+
+          // Greeting & User Name
+          const Text(
+            'Good morning,',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF7D8580),
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            'Ahmad Nur Hidayat',
+            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+              color: const Color(0xFF202522),
+              fontWeight: FontWeight.w900,
+              letterSpacing: -1.0,
+            ),
+          ),
+          const SizedBox(height: 26),
+
+          // Search Bar
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(22),
+              boxShadow: AppShadows.subtle,
+            ),
+            child: TextField(
+              readOnly: true,
+              onTap: () {
+                AppSnackBar.showInfo(context, 'Fitur pencarian terintegrasi');
+              },
+              decoration: InputDecoration(
+                hintText: 'Search doctors,\nservices...',
+                hintStyle: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF8A948E),
+                ),
+                prefixIcon: const Icon(
+                  Icons.search_rounded,
+                  color: Color(0xFF7A867F),
+                  size: 22,
+                ),
+                suffixIcon: IconButton(
+                  icon: const Icon(
+                    Icons.tune_rounded,
+                    color: AppColors.primary,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    AppSnackBar.showInfo(context, 'Filter poli dan jadwal');
+                  },
+                ),
+                border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
+                filled: false,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QueueCard extends StatelessWidget {
+  const _QueueCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: AppColors.primary, width: 2),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withAlpha(20),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(24),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(24),
+          child: Padding(
+            padding: const EdgeInsets.all(26),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFE5F4E7),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Text(
+                              'Today',
+                              style: TextStyle(
+                                color: AppColors.primary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'General Consultation',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w800,
+                                  color: AppColors.textPrimary,
+                                ),
+                          ),
+                          const SizedBox(height: 6),
+                          Row(
+                            children: const [
+                              Icon(
+                                Icons.access_time_filled_rounded,
+                                size: 16,
+                                color: AppColors.textSecondary,
+                              ),
+                              SizedBox(width: 6),
+                              Text(
+                                '10:30 · dr. Alya Rahman',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppColors.textSecondary,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Queue Pill Box
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE7F4E9),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: const [
+                          Text(
+                            'Queue',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          SizedBox(height: 2),
+                          Text(
+                            'A-12',
+                            style: TextStyle(
+                              color: AppColors.primary,
+                              fontSize: 26,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 18),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: const LinearProgressIndicator(
+                    value: 0.67,
+                    minHeight: 6,
+                    backgroundColor: Color(0xFFE4EAE5),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.primary,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'Now serving A-08',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF7D8580),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '~18 min',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 }
 
-class _ComingSoonPage extends StatelessWidget {
-  const _ComingSoonPage({required this.icon, required this.title});
+class _QuickAccessGrid extends StatelessWidget {
+  const _QuickAccessGrid({
+    required this.onBookAppointment,
+    required this.onMedicalRecord,
+    required this.onMedication,
+    required this.onConsultation,
+    required this.onDigitalCard,
+    required this.onHealthProfile,
+  });
 
-  final IconData icon;
-  final String title;
+  final VoidCallback onBookAppointment;
+  final VoidCallback onMedicalRecord;
+  final VoidCallback onMedication;
+  final VoidCallback onConsultation;
+  final VoidCallback onDigitalCard;
+  final VoidCallback onHealthProfile;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 64, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(height: 16),
-            Text(title, style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8),
-            const Text(
-              'Modul ini akan tersedia pada tahap implementasi fitur.',
-              textAlign: TextAlign.center,
+    final services = [
+      (Icons.event_available_rounded, 'Book Doctor', onBookAppointment),
+      (Icons.article_rounded, 'Medical Record', onMedicalRecord),
+      (Icons.medication_rounded, 'Medication', onMedication),
+      (Icons.psychology_rounded, 'Consultation', onConsultation),
+      (Icons.badge_rounded, 'Digital Card', onDigitalCard),
+      (Icons.monitor_heart_rounded, 'Health Profile', onHealthProfile),
+    ];
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: services.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 18,
+        crossAxisSpacing: 14,
+        childAspectRatio: 0.88,
+      ),
+      itemBuilder: (context, index) {
+        final item = services[index];
+        return _QuickAccessItem(
+          icon: item.$1,
+          label: item.$2,
+          onPressed: item.$3,
+        );
+      },
+    );
+  }
+}
+
+class _QuickAccessItem extends StatelessWidget {
+  const _QuickAccessItem({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onPressed,
+      borderRadius: BorderRadius.circular(18),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 66,
+            height: 66,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.borderLight),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x0C000000),
+                  blurRadius: 14,
+                  offset: Offset(0, 4),
+                ),
+              ],
             ),
-          ],
-        ),
+            child: Icon(icon, color: AppColors.primary, size: 28),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: AppColors.textPrimary,
+              height: 1.2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MedicationReminderCard extends StatelessWidget {
+  const _MedicationReminderCard({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      onTap: onTap,
+      padding: const EdgeInsets.all(20),
+      child: Row(
+        children: [
+          Container(
+            width: 54,
+            height: 54,
+            decoration: BoxDecoration(
+              color: const Color(0xFFE0F8FC),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: const Icon(
+              Icons.medication_rounded,
+              color: Color(0xFF00ACC1),
+              size: 28,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'UPCOMING · 12:30',
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Paracetamol 500 mg',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                const Text(
+                  'After lunch · 1 tablet',
+                  style: TextStyle(fontSize: 12, color: Color(0xFF7D8580)),
+                ),
+              ],
+            ),
+          ),
+          const Icon(
+            Icons.chevron_right_rounded,
+            size: 26,
+            color: AppColors.textTertiary,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _HealthArticleCard extends StatelessWidget {
+  const _HealthArticleCard({
+    required this.category,
+    required this.title,
+    required this.readTime,
+    required this.date,
+    required this.onTap,
+  });
+
+  final String category;
+  final String title;
+  final String readTime;
+  final String date;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppCard(
+      onTap: onTap,
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppColors.primaryContainer,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.article_outlined,
+              color: AppColors.primary,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    StatusBadge(
+                      label: category,
+                      type: BadgeType.primary,
+                      isSmall: true,
+                    ),
+                    Text(
+                      readTime,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textTertiary,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                    height: 1.35,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  date,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: AppColors.textTertiary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
