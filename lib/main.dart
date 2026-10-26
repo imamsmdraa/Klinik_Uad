@@ -19,7 +19,7 @@ class KlinikUadApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
-      initialRoute: AppRouter.home,
+      initialRoute: AppRouter.intro,
       routes: AppRouter.routes,
     );
   }

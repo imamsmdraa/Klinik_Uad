@@ -7,8 +7,12 @@ import '../features/medical_record/presentation/pages/medical_record_page.dart';
 import '../features/profile/presentation/pages/digital_medical_card_page.dart';
 import '../features/profile/presentation/pages/profile_page.dart';
 import '../features/reminder/presentation/pages/medication_reminder_page.dart';
+import '../features/auth/presentation/pages/intro_page.dart';
+import '../features/auth/presentation/pages/login_page.dart';
 
 abstract final class AppRouter {
+  static const intro = '/intro';
+  static const login = '/login';
   static const home = '/';
   static const booking = '/booking';
   static const queue = '/queue';
@@ -19,6 +23,8 @@ abstract final class AppRouter {
   static const digitalCard = '/digital-card';
 
   static final routes = <String, WidgetBuilder>{
+    intro: (_) => const IntroPage(),
+    login: (_) => const LoginPage(),
     home: (_) => const HomePage(),
     booking: (_) => const BookingPage(),
     queue: (_) => const QueuePage(),
