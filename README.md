@@ -1,17 +1,27 @@
-# flutter_application_1
+# Klinik UAD — Kelompok Klinik UAD
 
-A new Flutter project.
+Topik: Klinik
 
-## Getting Started
+Anggota:
 
-This project is a starting point for a Flutter application.
+- Naufal Adna Garibaldi — 2311016061
+- Sagara Imam Samudra — 2300016062
+- MHD Rafy Firdaus — 2300016055
+- Mohamad Arief Gunadi — 2300016031
 
-A few resources to get you started if this is your first Flutter project:
+## Cara Menjalankan
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+```bash
+flutter pub get
+flutter run
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Status Milestone
+
+| Milestone | Status | Tag git |
+|-----------|--------|---------|
+| M01 Inisiasi | Dalam proses | - |
+| M02 Spesifikasi | Dalam proses | - |
+| M03 Prototipe | Dalam proses | - |
+| M04 Frontend | Dalam proses | - |
+| M05 API | Belum mulai | - |
