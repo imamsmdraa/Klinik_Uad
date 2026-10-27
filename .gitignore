@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Security & Secrets (M01 Baseline)
+*.keystore
+*.jks
+key.properties
+*.local
+.env
+.env.*
+!.env.example

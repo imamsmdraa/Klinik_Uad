@@ -1,0 +1,42 @@
+=== BUKTI AUDIT BASELINE KEAMANAN KODE (M01 BASELINE) ===
+Tanggal Audit: Rabu, 28 Oktober 2026
+Proyek: Klinik UAD
+
+1. Verifikasi android:allowBackup="false"
+Berkas: android/app/src/main/AndroidManifest.xml
+Snippet:
+    <application
+        android:label="Klinik UAD"
+        android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:networkSecurityConfig="@xml/network_security_config">
+Status: TERPASANG & TERVALIDASI (Mencegah pencadangan data medis via ADB)
+
+2. Verifikasi Network Security Config (Tolak Cleartext HTTP)
+Berkas: android/app/src/main/res/xml/network_security_config.xml
+Isi:
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
+Status: TERPASANG & AKTIF (Hanya mengizinkan koneksi HTTPS terenkripsi)
+
+3. Verifikasi Linter avoid_print
+Berkas: analysis_options.yaml
+Snippet:
+linter:
+  rules:
+    avoid_print: true
+Pencarian print() di lib/: 0 kecocokan.
+Status: TERPASANG & TERVALIDASI
+
+4. Layanan Keamanan Kriptografis (PBKDF2 & Secure Storage)
+- lib/services/secure_storage_service.dart: Terintegrasi dengan EncryptedSharedPreferences (Android Keystore).
+- lib/services/pin_service.dart: PBKDF2-HMAC-SHA256 (10.000 iterasi) + salt acak 16-byte + Constant-Time Comparison.
+- Pengujian Otomatis: test/pin_service_test.dart (4/4 tests passed).
+Status: TERVALIDASI

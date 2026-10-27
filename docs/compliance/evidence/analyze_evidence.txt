@@ -1,0 +1,13 @@
+=== BUKTI VERIFIKASI FLUTTER ANALYZE (M01 BASELINE) ===
+Tanggal Eksekusi: Rabu, 28 Oktober 2026
+Perintah: flutter analyze
+Direktori: /home/adna/Klinik_Uad
+
+Hasil Analisis:
+Analyzing Klinik_Uad...
+No issues found! (ran in 1.1s)
+
+Status: LOLOS (0 errors, 0 warnings, 0 lints)
+Aturan avoid_print: AKTIF (analysis_options.yaml)
+Pengecekan panggilan print di lib/:
+NO_PRINT_CALLS_FOUND

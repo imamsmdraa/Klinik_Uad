@@ -1,0 +1,14 @@
+=== BUKTI VERIFIKASI PERMISSION ANDROID MANIFEST (M01 BASELINE) ===
+Tanggal Eksekusi: Rabu, 28 Oktober 2026
+Proyek: Klinik UAD (id.ac.uad.klinik_uad)
+Prinsip: Least Privilege (Tidak ada izin INTERNET sebelum M05 untuk data lokal/sintetis)
+
+1. Pengecekan uses-permission pada Release Manifest (android/app/src/main/AndroidManifest.xml):
+Perintah: grep -rn "uses-permission" android/app/src/main/AndroidManifest.xml
+Hasil: NO_USES_PERMISSION_FOUND
+
+Keterangan:
+- AndroidManifest rilis utama sama sekali tidak meminta izin android.permission.INTERNET.
+- Izin internet hanya terdapat pada android/app/src/debug/ dan profile/ khusus untuk koneksi hot-reload Flutter Tooling saat pengembangan lokal.
+
+Status: MEMENUHI KETENTUAN M01 (LEAST PRIVILEGE)

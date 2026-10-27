@@ -1,4 +1,4 @@
-package com.example.flutter_application_1
+package id.ac.uad.klinik_uad
 
 import io.flutter.embedding.android.FlutterActivity
 
