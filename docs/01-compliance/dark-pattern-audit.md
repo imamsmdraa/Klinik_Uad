@@ -20,11 +20,3 @@
 - UX-04: Tim menandai simulasi dan data sintetis serta menyesuaikan klaim keamanan, realtime, dan hasil operasi dengan bukti implementasi, sesuai R2.
 
 PRV-03 mengatur penghapusan data uji dan batas retensi; PRV-05 mengatur informasi privasi serta kontak, sesuai R1 dan R3. Mematikan pengingat tidak otomatis mencabut persetujuan untuk pemrosesan lain atau menghapus rekam medis.
-
-## Status M01 dan Bukti Audit
-
-Tim baru menyusun pertanyaan dan kriteria audit ini; tim belum menyatakan aplikasi lulus. Dari pembacaan kode, pilihan Ingat saya masih memakai nilai awal `true`. Tim perlu mengubahnya menjadi MATI sebelum memenuhi UX-02. Tim juga perlu meninjau klaim enkripsi pada rekam medis dan klaim keberhasilan fitur simulasi sesuai UX-04.
-
-Pada setiap rilis, satu anggota menjalankan skenario dari kondisi awal aplikasi dan satu anggota lain meninjau hasilnya. Tim mencatat tag/commit, tanggal, penguji, pola, langkah uji, hasil aktual, status lulus/gagal/belum tersedia, dan perbaikan. Fitur yang belum tersedia tidak mendapat status lulus; tim mencantumkan milestone targetnya.
-
-Tim menyimpan catatan dan tangkapan layar dengan data sintetis di `evidence/`. Tim menguji UX-03 bersama audit ini; tabel pertanyaan saja belum membuktikan ukuran teks, kontras, atau aksesibilitas kontrol.

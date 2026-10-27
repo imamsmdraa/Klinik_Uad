@@ -9,6 +9,6 @@
 | Tarik persetujuan (Ps. 9) | Pengguna mengatur fitur opsional dengan sakelar default MATI dan menarik persetujuan pemrosesan untuk tujuan terkait melalui Privasi & Data. | UX-02 | M05 |
 | Ganti rugi / keluhan (Ps. 12) | Kebijakan privasi mencantumkan kontak tim: 2300016055@webmail.uad.ac.id untuk permintaan dan keluhan. Kanal ini tidak menggantikan hak menggugat dan menerima ganti rugi. | PRV-05 | M04 |
 
-Catatan: tabel ini berisi rencana fitur Klinik UAD. Tim memakai data sintetis pada M01; fitur pemenuhan hak di atas belum lengkap. Mematikan pengingat tidak otomatis mencabut persetujuan untuk pemrosesan lain atau menghapus rekam medis.
 
-Sumber: [UU Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi, Bab IV](https://jdih.komdigi.go.id/produk_hukum/view/id/832/t/crc32/).
+
+
