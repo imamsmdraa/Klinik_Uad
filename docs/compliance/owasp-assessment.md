@@ -3,7 +3,7 @@
 
 | # | Risiko | Status M01 | Kontrol / Rencana |
 |---|--------|------------|-------------------|
-| M1 | Kredensial tidak aman | Perlu tindakan | SEC-02: ganti PIN demo `1234` dengan hash PBKDF2 dan salt acak. SEC-04: tambahkan pola rahasia ke `.gitignore` dan periksa kode serta riwayat Git sebelum rilis. Tim belum menyelesaikan pemindaian rahasia. |
+| M1 | Kredensial tidak aman | Perlu tindakan | SEC-02: ganti PIN demo `1234` dengan hash PBKDF2‑HMAC‑SHA256 dan salt acak. SEC-04: tambahkan pola rahasia ke `.gitignore` dan periksa kode serta riwayat Git sebelum rilis. Tim belum menyelesaikan pemindaian rahasia. |
 | M2 | Supply chain | Perlu tindakan | SEC-09: tinjau sumber, versi, pemeliharaan, dan risiko dependensi. Git sudah melacak `pubspec.lock`, tetapi salinan lokal masih berubah; tinjau dan commit perubahan yang sesuai. Tim belum menyimpan bukti peninjauan paket. |
 | M3 | Autentikasi / otorisasi | Perlu tindakan | Login saat ini hanya memvalidasi formulir dan berpindah halaman; belum ada verifikasi akun atau izin. SEC-02: PIN lokal dengan batas percobaan. SEC-07: batasi akses sesuai pasien pemilik, peran, dan hubungan pelayanan; tegakkan aturan pada backend di M05. |
 | M4 | Validasi input/output | Perlu tindakan | Formulir login/register sudah memiliki sebagian validator, tetapi belum membuktikan validasi data layanan. SEC-08: pada M04, tetapkan batas panjang, format, rentang nilai, dan jadwal; tangani input kosong, data tidak valid, serta kegagalan penyimpanan. Pada M05, ulangi validasi pada backend. |

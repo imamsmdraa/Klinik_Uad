@@ -4,8 +4,10 @@ import '../../../../shared/theme/app_shadows.dart';
 import '../../../../shared/theme/app_spacing.dart';
 import '../../../../shared/widgets/app_cards.dart';
 import '../../../../shared/widgets/app_dialogs.dart';
-import '../../../../shared/widgets/app_text_field.dart';
-import '../../../../shared/widgets/status_badge.dart';
+import '../../../../shared/widgets/app_text_field.dart' show AppSearchBar;
+import '../../../../shared/widgets/status_badge.dart' show CategoryPill, StatusBadge, BadgeType;
+import '../../../../services/pin_service.dart';
+
 
 class MedicalRecordPage extends StatefulWidget {
   const MedicalRecordPage({super.key});
@@ -17,7 +19,7 @@ class MedicalRecordPage extends StatefulWidget {
 class _MedicalRecordPageState extends State<MedicalRecordPage> {
   bool _isUnlocked = false;
   String _pin = '';
-  final String _correctPin = '1234';
+  final PinService _pinSrv = PinService();
   String _searchQuery = '';
   String _selectedYear = 'Semua Tahun';
 
@@ -92,18 +94,22 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
   }
 
   void _verifyPin(String inputPin) {
-    if (inputPin == _correctPin) {
-      setState(() {
-        _isUnlocked = true;
-      });
-      AppSnackBar.showSuccess(
-        context,
-        'Rekam medis berhasil dibuka secara aman',
-      );
-    } else {
-      AppSnackBar.showError(context, 'PIN Keamanan salah (Gunakan 1234)');
-      setState(() => _pin = '');
-    }
+    _pinSrv.validateStoredPin(inputPin).then((ok) {
+      if (!mounted) return;
+      if (ok) {
+        setState(() {
+          _isUnlocked = true;
+          _pin = '';
+        });
+        AppSnackBar.showSuccess(
+          context,
+          'Rekam medis berhasil dibuka secara aman',
+        );
+      } else {
+        AppSnackBar.showError(context, 'PIN Keamanan salah');
+        setState(() => _pin = '');
+      }
+    });
   }
 
   @override
