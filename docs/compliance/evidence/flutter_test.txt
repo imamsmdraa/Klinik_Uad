@@ -1,0 +1,40 @@
+bash: tidak dapat menset terminal proses grup (-1): iocl untuk perangkat tidak sesuai
+bash: tidak ada pengontrol pekerjaan dalam shell ini
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":42995,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"/home/adna/Klinik_Uad/test/pin_service_test.dart"},"type":"suite","time":0}
+{"test":{"id":1,"name":"loading /home/adna/Klinik_Uad/test/pin_service_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":1}
+{"suite":{"id":2,"platform":"vm","path":"/home/adna/Klinik_Uad/test/widget_test.dart"},"type":"suite","time":5}
+{"test":{"id":3,"name":"loading /home/adna/Klinik_Uad/test/widget_test.dart","suiteID":2,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":5}
+{"count":2,"time":6,"type":"allSuites"}
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":null}}]
+
+[{"event":"test.startedProcess","params":{"vmServiceUri":null}}]
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":2588}
+{"group":{"id":4,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":null,"column":null,"url":null},"type":"group","time":2591}
+{"group":{"id":5,"suiteID":0,"parentID":4,"name":"PinService Security Tests","metadata":{"skip":false,"skipReason":null},"testCount":4,"line":5,"column":3,"url":"file:///home/adna/Klinik_Uad/test/pin_service_test.dart"},"type":"group","time":2591}
+{"test":{"id":6,"name":"PinService Security Tests generateSalt menghasilkan 16 bytes unik","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":12,"column":5,"url":"file:///home/adna/Klinik_Uad/test/pin_service_test.dart"},"type":"testStart","time":2591}
+{"testID":6,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2625}
+{"test":{"id":7,"name":"PinService Security Tests hashPin menghasilkan hash dan salt Base64 yang valid","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":21,"column":5,"url":"file:///home/adna/Klinik_Uad/test/pin_service_test.dart"},"type":"testStart","time":2625}
+{"testID":3,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":2633}
+{"group":{"id":8,"suiteID":2,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":7,"line":null,"column":null,"url":null},"type":"group","time":2634}
+{"test":{"id":9,"name":"menampilkan intro dan login Klinik UAD","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":16,"root_column":3,"root_url":"file:///home/adna/Klinik_Uad/test/widget_test.dart"},"type":"testStart","time":2634}
+{"testID":7,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2699}
+{"test":{"id":10,"name":"PinService Security Tests verifyPin berhasil untuk PIN yang benar dan gagal untuk PIN salah","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":28,"column":5,"url":"file:///home/adna/Klinik_Uad/test/pin_service_test.dart"},"type":"testStart","time":2699}
+{"testID":10,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2872}
+{"test":{"id":11,"name":"PinService Security Tests constantTimeEquals memeriksa kesamaan byte secara tepat","suiteID":0,"groupIDs":[4,5],"metadata":{"skip":false,"skipReason":null},"line":49,"column":5,"url":"file:///home/adna/Klinik_Uad/test/pin_service_test.dart"},"type":"testStart","time":2873}
+{"testID":11,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":2875}
+{"testID":9,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":3973}
+{"test":{"id":12,"name":"menampilkan dan memvalidasi register Klinik UAD","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":29,"root_column":3,"root_url":"file:///home/adna/Klinik_Uad/test/widget_test.dart"},"type":"testStart","time":3973}
+{"testID":12,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":4412}
+{"test":{"id":13,"name":"menampilkan beranda Klinik UAD","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":47,"root_column":3,"root_url":"file:///home/adna/Klinik_Uad/test/widget_test.dart"},"type":"testStart","time":4412}
+{"testID":13,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5253}
+{"test":{"id":14,"name":"navigasi bawah berpindah ke janji","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":60,"root_column":3,"root_url":"file:///home/adna/Klinik_Uad/test/widget_test.dart"},"type":"testStart","time":5254}
+{"testID":14,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":5966}
+{"test":{"id":15,"name":"navigasi ke rekam medis menampilkan proteksi PIN","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":72,"root_column":3,"root_url":"file:///home/adna/Klinik_Uad/test/widget_test.dart"},"type":"testStart","time":5967}
+{"testID":15,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":6548}
+{"test":{"id":16,"name":"navigasi ke pengingat obat menampilkan kepatuhan obat","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":85,"root_column":3,"root_url":"file:///home/adna/Klinik_Uad/test/widget_test.dart"},"type":"testStart","time":6549}
+{"testID":16,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7062}
+{"test":{"id":17,"name":"navigasi ke profil menampilkan parameter medis","suiteID":2,"groupIDs":[8],"metadata":{"skip":false,"skipReason":null},"line":174,"column":5,"url":"package:flutter_test/src/widget_tester.dart","root_line":99,"root_column":3,"root_url":"file:///home/adna/Klinik_Uad/test/widget_test.dart"},"type":"testStart","time":7062}
+{"testID":17,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":7769}
+{"success":true,"type":"done","time":7792}

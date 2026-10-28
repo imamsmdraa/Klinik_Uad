@@ -7,11 +7,7 @@ class SecureStorageService {
 
   SecureStorageService({FlutterSecureStorage? storage})
       : _storage = storage ??
-            const FlutterSecureStorage(
-              aOptions: AndroidOptions(
-                encryptedSharedPreferences: true,
-              ),
-            );
+            const FlutterSecureStorage();
 
   /// Menyimpan pasangan key-value secara terenkripsi
   Future<void> write(String key, String value) async {
