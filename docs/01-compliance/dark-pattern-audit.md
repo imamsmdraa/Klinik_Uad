@@ -9,7 +9,7 @@
 | Confirmshaming | Apakah teks penolakan menyalahkan pengguna, misalnya 'Saya tidak peduli kesehatan saya'? | Tim memakai teks netral seperti 'Tidak sekarang' atau 'Nonaktifkan pengingat', tanpa menyalahkan pengguna. |
 | Privacy zuckering | Apakah pengguna harus mencari beberapa halaman untuk membaca kebijakan, mengekspor data, menarik persetujuan, atau mengajukan penghapusan? | Tim menyediakan satu layar Privasi & Data untuk informasi dan tindakan terkait. Tim menampilkan tujuan, dampak pilihan, dan kontak sebelum pengguna memberikan data. |
 | Forced consent pada layanan kesehatan | Apakah pasien harus mengaktifkan pengingat, menyerahkan data tambahan, atau menyetujui tujuan opsional agar bisa memesan jadwal? | Tim memisahkan tujuan opsional dari kebutuhan layanan. Penolakan pengingat tidak menghalangi booking; tim menjelaskan alasan jika layanan memerlukan data tertentu. |
-| Klaim keamanan atau layanan yang menyesatkan | Apakah teks membuat penguji mengira PIN demo, chat, enkripsi, antrean realtime, atau booking simulasi sudah menjadi layanan nyata? | Tim memberi label prototipe dan data sintetis. Tim menyatakan keberhasilan sesuai hasil operasi dan hanya memakai klaim keamanan/realtime setelah memiliki bukti. |
+| Klaim keamanan atau layanan yang menyesatkan | Apakah teks membuat penguji mengira kunci PIN lokal, chat, enkripsi, antrean realtime, atau booking simulasi sudah menjadi layanan nyata? | Tim memberi label prototipe dan data sintetis. Tim menyatakan keberhasilan sesuai hasil operasi dan hanya memakai klaim keamanan/realtime setelah memiliki bukti. |
 | Nagging pada pengingat dan izin | Apakah tim terus meminta izin notifikasi atau mengaktifkan kembali pengingat setelah pengguna menolak? | Tim menghormati pilihan pengguna. Pengguna dapat mengaktifkan kembali fitur melalui pengaturan; tim tidak mengulang permintaan saat membuka halaman lain. |
 
 ## Requirement yang Lahir dari Register Ini
@@ -20,3 +20,5 @@
 - UX-04: Tim menandai simulasi dan data sintetis serta menyesuaikan klaim keamanan, realtime, dan hasil operasi dengan bukti implementasi, sesuai R2.
 
 PRV-03 mengatur penghapusan data uji dan batas retensi; PRV-05 mengatur informasi privasi serta kontak, sesuai R1 dan R3. Mematikan pengingat tidak otomatis mencabut persetujuan untuk pemrosesan lain atau menghapus rekam medis.
+
+Catatan implementasi 29 Oktober 2026: pilihan Ingat saya kini default MATI. Layar Records menyebut data sintetis dan tidak lagi mengklaim enkripsi rekam medis atau ekspor PDF telah tersedia. Audit R5 seluruh aplikasi, termasuk pembaca layar dan ukuran teks, masih perlu pengujian; perubahan ini belum berarti UX-01–UX-04 lulus seluruhnya.

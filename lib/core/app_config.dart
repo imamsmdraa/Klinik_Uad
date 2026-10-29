@@ -7,7 +7,7 @@ abstract final class AppConfig {
   static const String appVersion = '1.0.0';
 
   /// Saklar mode data:
-  /// false = menggunakan data sintetis lokal (In-Memory / SQLite)
+  /// false = menggunakan data sintetis lokal dalam memori
   /// true = terhubung ke server remote (Supabase / REST API)
   static const bool useRemote = bool.fromEnvironment(
     'USE_REMOTE',
@@ -23,7 +23,7 @@ abstract final class AppConfig {
   /// Alamat URL API backend
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'https://api.klinik.uad.ac.id/v1',
+    defaultValue: '',
   );
 
   /// Status environment saat ini
@@ -42,4 +42,18 @@ abstract final class AppConfig {
   static bool get isDev => environment == AppEnvironment.dev;
   static bool get isStaging => environment == AppEnvironment.staging;
   static bool get isProd => environment == AppEnvironment.prod;
+
+  static void validate() {
+    if (!{
+      'dev',
+      'test',
+      'staging',
+      'prod',
+      'production',
+    }.contains(environmentName.toLowerCase())) {
+      throw StateError('ENV harus dev, test, staging, prod, atau production.');
+    }
+    // ponytail: M01 offline; implementasikan remote dan tinjau izin pada M05.
+    if (useRemote) throw UnsupportedError('Backend belum tersedia pada M01.');
+  }
 }

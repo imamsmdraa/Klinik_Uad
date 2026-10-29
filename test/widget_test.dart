@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:klinik_uad/main.dart';
 
 void main() {
+  setUp(() => FlutterSecureStorage.setMockInitialValues({}));
   Future<void> openHome(WidgetTester tester) async {
     await tester.tap(find.text('Login'));
     await tester.pumpAndSettle();
@@ -14,7 +17,7 @@ void main() {
   }
 
   testWidgets('menampilkan intro dan login Klinik UAD', (tester) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
 
     expect(find.textContaining('The best'), findsOneWidget);
     expect(find.textContaining('your health'), findsOneWidget);
@@ -29,7 +32,7 @@ void main() {
   testWidgets('menampilkan dan memvalidasi register Klinik UAD', (
     tester,
   ) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
 
     await tester.tap(find.text('Create Account'));
     await tester.pumpAndSettle();
@@ -45,7 +48,7 @@ void main() {
   });
 
   testWidgets('menampilkan beranda Klinik UAD', (tester) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
     await openHome(tester);
 
     expect(find.text('KLINIK UAD'), findsOneWidget);
@@ -58,7 +61,7 @@ void main() {
   });
 
   testWidgets('navigasi bawah berpindah ke janji', (tester) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
     await openHome(tester);
 
     await tester.tap(find.text('Appointments').first);
@@ -72,20 +75,20 @@ void main() {
   testWidgets('navigasi ke rekam medis menampilkan proteksi PIN', (
     tester,
   ) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
     await openHome(tester);
 
     await tester.tap(find.text('Records').first);
     await tester.pumpAndSettle();
 
     expect(find.text('Keamanan Rekam Medis'), findsOneWidget);
-    expect(find.text('Akses Terenkripsi EMR Pasien'), findsOneWidget);
+    expect(find.text('Buat PIN Rekam Medis'), findsOneWidget);
   });
 
   testWidgets('navigasi ke pengingat obat menampilkan kepatuhan obat', (
     tester,
   ) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
     await openHome(tester);
 
     await tester.tap(find.text('Alerts').first);
@@ -97,7 +100,7 @@ void main() {
   });
 
   testWidgets('navigasi ke profil menampilkan parameter medis', (tester) async {
-    await tester.pumpWidget(const MyApp());
+    await tester.pumpWidget(const ProviderScope(child: MyApp()));
     await openHome(tester);
 
     await tester.tap(find.text('Profile').first);

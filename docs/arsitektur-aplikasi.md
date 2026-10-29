@@ -1,5 +1,7 @@
 # Tahap 2 - Arsitektur Aplikasi
 
+Status M01: kode memakai Riverpod, repository memori untuk janji dan rekam medis, konfigurasi offline, serta layanan PIN/secure storage. [ADR sinkronisasi](adr/001-repository-pattern.md) menjelaskan integrasinya. Struktur domain/data, Supabase, dan RBAC di bawah merupakan target tahap berikutnya.
+
 ## Keputusan arsitektur
 
 Flutter menggunakan **feature-first Clean Architecture**:

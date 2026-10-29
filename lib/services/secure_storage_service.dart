@@ -1,13 +1,16 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 /// Layanan penyimpanan kredensial dan data sensitif lokal (Android Keystore / iOS Keychain).
-/// Mencegah pembobolan data medis pada perangkat yang di-root atau diekstrak via ADB.
+/// Perlindungan platform tidak menjamin keamanan perangkat yang sudah dikuasai penyerang.
 class SecureStorageService {
   final FlutterSecureStorage _storage;
 
   SecureStorageService({FlutterSecureStorage? storage})
-      : _storage = storage ??
-            const FlutterSecureStorage();
+    : _storage =
+          storage ??
+          const FlutterSecureStorage(
+            aOptions: AndroidOptions(resetOnError: false),
+          );
 
   /// Menyimpan pasangan key-value secara terenkripsi
   Future<void> write(String key, String value) async {
@@ -51,6 +54,12 @@ class SecureStorageService {
 
   Future<String?> getPinHash() async => read(_keyUserPinHash);
   Future<String?> getPinSalt() async => read(_keyUserPinSalt);
+
+  /// Hanya hapus format lama setelah record pengganti berhasil tersimpan.
+  Future<void> deleteLegacyPinData() async {
+    await delete(_keyUserPinHash);
+    await delete(_keyUserPinSalt);
+  }
 
   Future<void> savePrivacyConsent(bool accepted) async {
     await write(_keyPrivacyConsent, accepted.toString());

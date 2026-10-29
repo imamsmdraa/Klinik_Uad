@@ -1,6 +1,8 @@
 # Spesifikasi Kebutuhan Fungsional & Use Case (Use Cases)
 **Proyek:** Klinik UAD — Layanan Kesehatan & Rekam Medis Kampus  
 
+Dokumen ini merupakan rancangan layanan M02–M05. M01 memakai simulasi lokal, belum menyediakan backend, basis data medis terenkripsi, notifikasi terjadwal, atau check-in operasional. ID kepatuhan mengikuti [katalog utama](../01-compliance/requirements-catalog.md).
+
 ---
 
 ## 1. Matriks Aktor Sistem
@@ -45,11 +47,11 @@
 - **Pre-kondisi:** Pasien memiliki riwayat pemeriksaan medis sebelumnya.
 - **Alur Utama:**
   1. Pasien menekan kartu riwayat pemeriksaan di menu Rekam Medis.
-  2. Sistem menampilkan papan input PIN 6-digit.
+  2. Sistem menampilkan papan input PIN empat digit; instalasi baru membuat PIN dengan konfirmasi.
   3. Pasien memasukkan PIN.
   4. Sistem memverifikasi hash PIN secara *constant-time*.
-  5. Jika valid, sistem mendekripsi catatan diagnosis, keluhan, dan daftar obat untuk ditampilkan di layar.
-  6. Jika salah 3 kali berturut-turut, sistem mengunci akses selama 5 menit.
+  5. Jika valid, M01 menampilkan contoh sintetis dari repository memori. Dekripsi basis data medis menunggu implementasi persistensi.
+  6. Jika salah lima kali berturut-turut, sistem menunda akses selama 30 detik. Pindah tab atau meninggalkan aplikasi mengunci Records kembali.
 
 ### UC-03: Penjadwalan Pengingat Minum Obat (Local Reminder)
 - **Aktor:** Pasien
