@@ -1,0 +1,3 @@
+package: id.ac.uad.klinik_uad
+permission: id.ac.uad.klinik_uad.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION
+uses-permission: name='id.ac.uad.klinik_uad.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION'

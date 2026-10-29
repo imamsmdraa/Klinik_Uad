@@ -1,27 +1,20 @@
-# ADR 002: Strategi Pelindungan Data & Enkripsi Kriptografis
-**Status:** Diterima (Accepted)  
-**Tanggal:** Semester Gasal 2026/2027  
-**Pengambil Keputusan:** Tim Pengembang Kelompok Klinik Kampus & Analis Keamanan  
-**Referensi:** UU PDP No. 27/2022 Pasal 4 Ayat 2 (Data Pribadi Spesifik) & Baseline Keamanan M01
+# ADR 002: Perlindungan data dan PIN lokal
 
----
+Status: Diterima; disesuaikan saat sinkronisasi main, 29 Oktober 2026.
 
-## Konteks & Permasalahan
-Aplikasi Klinik UAD mengelola data kesehatan, riwayat diagnosis, alergi obat, dan catatan konseling psikologis yang berstatus **Data Pribadi Spesifik**. Jika data disimpan dalam teks polos pada SharedPreferences atau database lokal tanpa enkripsi, pengguna lain atau malware pada ponsel yang di-root dapat membaca data rahasia tersebut.
+## Konteks
 
----
+Topik Klinik mencakup data kesehatan. M01 memakai contoh sintetis; kode belum menyimpan basis data rekam medis terenkripsi atau menegakkan izin pasien/petugas. Kebijakan implementasi harus sesuai kondisi ini.
 
-## Keputusan Arsitektur
-1. Menggunakan **`flutter_secure_storage`** untuk menyimpan token autentikasi sesi, salt pengguna, dan kunci simetris lokal di dalam **Android Keystore** (hardware-backed).
-2. Menerapkan proteksi **PIN 6-digit** untuk mengakses menu Rekam Medis:
-   - Nilai PIN **tidak pernah disimpan mentah**.
-   - PIN di-hash menggunakan algoritma **PBKDF2-HMAC-SHA256** dengan salt acak 16-byte minimal 10.000 iterasi via pustaka `cryptography`.
-   - Pengecekan PIN dilakukan dengan **Constant-Time Comparison** untuk mencegah serangan kebocoran waktu (*timing attacks*).
-3. Menonaktifkan pencadangan otomatis OS dengan menyetel `android:allowBackup="false"` pada `AndroidManifest.xml`.
-4. Mengunci lalu lintas jaringan agar hanya menerima koneksi aman terenkripsi (HTTPS/TLS) melalui `network_security_config.xml`.
+## Keputusan
 
----
+- Gunakan `flutter_secure_storage` untuk hash PIN, salt, jumlah iterasi, versi format, percobaan, dan akhir lockout. Android memakai perlindungan kunci platform; kemampuan hardware bergantung perangkat. `resetOnError=false` menjaga agar error tidak menghapus kredensial otomatis.
+- PIN lokal mengikuti keypad empat digit. PIN baru memakai PBKDF2-HMAC-SHA256 120.000 iterasi, salt acak 16 byte, hasil 256 bit. Perbandingan byte tidak berhenti pada perbedaan pertama. Lima kegagalan menunda akses 30 detik.
+- Pertahankan PIN lama dari main. Format dua key 10.000 iterasi ditingkatkan setelah PIN benar; format record tunggal branch sebelumnya tetap terbaca. PIN bawaan tidak lagi dibuat pada instalasi baru.
+- Tetapkan backup Android nonaktif, larang HTTP, dan periksa APK release tanpa INTERNET. Integrasi HTTPS backend menunggu M05.
 
-## Konsekuensi
-- **Positif:** Memenuhi seluruh syarat hukum UU PDP No. 27/2022 dan standar OWASP Mobile Top 10 (M9 & M10). Data tetap aman meskipun file fisik database diekstrak dari perangkat.
-- **Tantangan:** Proses hashing PBKDF2 membutuhkan komputasi kecil (~100-200 ms) saat verifikasi PIN, yang justru bermanfaat untuk mencegah serangan brute-force.
+## Batas
+
+Kunci layar bukan enkripsi rekam medis atau kontrol lintas pasien/peran. Root, perubahan jam perangkat, PIN empat digit, serta snapshot layar memerlukan penilaian tersendiri. Keamanan native dan waktu KDF perlu diukur pada perangkat. Keputusan ini belum membuktikan seluruh UU PDP atau OWASP terpenuhi.
+
+Lihat [ADR sinkronisasi](001-repository-pattern.md), [R4](../01-compliance/owasp-assessment.md), dan [panduan uji manual](../m01-security-testing.md).

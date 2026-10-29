@@ -1,84 +1,96 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../models/medical_record.dart';
+import '../../../../providers/app_providers.dart';
+import '../../../../services/pin_service.dart';
 import '../../../../shared/theme/app_colors.dart';
 import '../../../../shared/theme/app_shadows.dart';
 import '../../../../shared/theme/app_spacing.dart';
 import '../../../../shared/widgets/app_cards.dart';
 import '../../../../shared/widgets/app_dialogs.dart';
-import '../../../../shared/widgets/app_text_field.dart' show AppSearchBar;
-import '../../../../shared/widgets/status_badge.dart' show CategoryPill, StatusBadge, BadgeType;
-import '../../../../services/pin_service.dart';
+import '../../../../shared/widgets/app_text_field.dart';
+import '../../../../shared/widgets/status_badge.dart';
 
+class MedicalRecordPage extends ConsumerStatefulWidget {
+  const MedicalRecordPage({super.key, this.active = true});
 
-class MedicalRecordPage extends StatefulWidget {
-  const MedicalRecordPage({super.key});
+  final bool active;
 
   @override
-  State<MedicalRecordPage> createState() => _MedicalRecordPageState();
+  ConsumerState<MedicalRecordPage> createState() => _MedicalRecordPageState();
 }
 
-class _MedicalRecordPageState extends State<MedicalRecordPage> {
+class _MedicalRecordPageState extends ConsumerState<MedicalRecordPage>
+    with WidgetsBindingObserver {
   bool _isUnlocked = false;
   String _pin = '';
-  final PinService _pinSrv = PinService();
+  String? _firstPin;
+  bool _hasPin = false;
+  bool _ready = false;
+  bool _busy = false;
+  String? _error;
+  int _session = 0;
   String _searchQuery = '';
   String _selectedYear = 'Semua Tahun';
 
   final List<String> _years = ['Semua Tahun', '2026', '2025', '2024'];
 
-  final List<_MedicalRecordEntry> _records = const [
-    _MedicalRecordEntry(
-      id: 'REC-2026-004',
-      date: '12 Okt 2026',
-      clinic: 'Poli Umum',
-      doctor: 'dr. Alya Rahman',
-      diagnosis: 'Faringitis Akut (J02.9)',
-      symptoms: 'Nyeri menelan, demam 38°C, tenggorokan merah sejak 2 hari.',
-      vitalSigns: 'TD: 118/76 mmHg · Suhu: 38.0°C · Nadi: 84 bpm · RR: 18x/m',
-      prescriptions: [
-        'Amoxicillin 500 mg (3x1 sesudah makan - 5 hari)',
-        'Paracetamol 500 mg (3x1 bila demam)',
-        'Vitamin C 500 mg (1x1 sesudah makan)',
-      ],
-      labResults: 'Rapid Antigen Negatif · Leukosit dalam batas wajar',
-      status: 'Selesai',
-    ),
-    _MedicalRecordEntry(
-      id: 'REC-2026-003',
-      date: '15 Sep 2026',
-      clinic: 'Poli Gigi',
-      doctor: 'drg. Dimas Prasetyo, Sp.KG',
-      diagnosis: 'Pembersihan Karang Gigi / Scaling (K03.6)',
-      symptoms:
-          'Pemeriksaan rutin semesteran, gusi mudah berdarah saat sikat gigi.',
-      vitalSigns: 'TD: 120/80 mmHg · Suhu: 36.5°C · Nadi: 76 bpm',
-      prescriptions: [
-        'Chlorhexidine Mouthwash 0.2% (2x sehari kumur)',
-        'Asam Mefenamat 500 mg (prn bila linu)',
-      ],
-      labResults: 'Indeks Plak: 18% (Kategori Baik Pasca Pembersihan)',
-      status: 'Selesai',
-    ),
-    _MedicalRecordEntry(
-      id: 'REC-2026-002',
-      date: '28 Mei 2026',
-      clinic: 'Poli Umum',
-      doctor: 'dr. Hendra Wicaksono, Sp.PD',
-      diagnosis: 'Dispepsia Fungsional / Maag (K30)',
-      symptoms:
-          'Nyeri ulu hati perih, mual di pagi hari, kembung setelah konsumsi kopi.',
-      vitalSigns: 'TD: 115/75 mmHg · Suhu: 36.7°C · Nadi: 78 bpm',
-      prescriptions: [
-        'Omeprazole 20 mg (1x1 sebelum makan pagi)',
-        'Antasida Doen Suspensi (3x1 sendok takar 1 jam sebelum makan)',
-        'Domperidone 10 mg (3x1 bila mual)',
-      ],
-      labResults: 'Ureum: 22 mg/dL · Kreatinin: 0.9 mg/dL (Normal)',
-      status: 'Selesai',
-    ),
-  ];
+  List<MedicalRecord> _records = [];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _loadPin();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void _lock() {
+    setState(() {
+      _session++;
+      _isUnlocked = false;
+      _pin = '';
+      _firstPin = null;
+      _records = [];
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant MedicalRecordPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!widget.active && oldWidget.active) _lock();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) _lock();
+  }
+
+  Future<void> _loadPin() async {
+    try {
+      final hasPin = await ref.read(pinServiceProvider).isPinEnabled();
+      if (!mounted) return;
+      setState(() {
+        _hasPin = hasPin;
+        _ready = true;
+        _error = null;
+      });
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => _error = 'Penyimpanan aman tidak dapat dibuka. Coba lagi.',
+        );
+      }
+    }
+  }
 
   void _onKeypadTap(String digit) {
-    if (_pin.length < 4) {
+    if (_ready && !_busy && _pin.length < 4) {
       final newPin = _pin + digit;
       setState(() => _pin = newPin);
       if (newPin.length == 4) {
@@ -88,32 +100,97 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
   }
 
   void _onBackspace() {
+    if (_busy) return;
     if (_pin.isNotEmpty) {
       setState(() => _pin = _pin.substring(0, _pin.length - 1));
     }
   }
 
-  void _verifyPin(String inputPin) {
-    _pinSrv.validateStoredPin(inputPin).then((ok) {
-      if (!mounted) return;
-      if (ok) {
-        setState(() {
-          _isUnlocked = true;
-          _pin = '';
-        });
-        AppSnackBar.showSuccess(
-          context,
-          'Rekam medis berhasil dibuka secara aman',
-        );
-      } else {
-        AppSnackBar.showError(context, 'PIN Keamanan salah');
-        setState(() => _pin = '');
-      }
+  Future<void> _verifyPin(String inputPin) async {
+    if (!_hasPin && _firstPin == null) {
+      setState(() {
+        _firstPin = inputPin;
+        _pin = '';
+        _error = null;
+      });
+      return;
+    }
+    if (!_hasPin && inputPin != _firstPin) {
+      setState(() {
+        _firstPin = null;
+        _pin = '';
+        _error = 'PIN tidak sama. Buat PIN kembali.';
+      });
+      return;
+    }
+    final session = _session;
+    setState(() {
+      _busy = true;
+      _error = null;
     });
+    try {
+      final service = ref.read(pinServiceProvider);
+      if (!_hasPin) {
+        await service.setupNewPin(inputPin);
+        if (mounted) setState(() => _hasPin = true);
+      } else if (await service.validateStoredPin(inputPin)) {
+        final records = await ref
+            .read(medicalRecordRepositoryProvider)
+            .getAll();
+        if (mounted && session == _session && widget.active) {
+          setState(() {
+            _records = records;
+            _isUnlocked = true;
+          });
+        }
+      } else if (mounted) {
+        setState(() => _error = 'PIN salah. Coba kembali.');
+      }
+    } on PinLockedException catch (error) {
+      if (mounted) {
+        final seconds = error.until.difference(DateTime.now()).inSeconds + 1;
+        setState(
+          () => _error = 'Terlalu banyak percobaan. Tunggu $seconds detik.',
+        );
+      }
+    } catch (_) {
+      if (mounted) {
+        setState(
+          () => _error = 'Verifikasi gagal. Akses tetap terkunci. Coba lagi.',
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _busy = false;
+          _pin = '';
+          _firstPin = null;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_ready) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Keamanan Rekam Medis')),
+        body: Center(
+          child: _error == null
+              ? const CircularProgressIndicator()
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(_error!, textAlign: TextAlign.center),
+                    TextButton(
+                      onPressed: _loadPin,
+                      child: const Text('Coba lagi'),
+                    ),
+                  ],
+                ),
+        ),
+      );
+    }
     if (!_isUnlocked) {
       return _buildPinLockScreen();
     }
@@ -138,10 +215,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
             icon: const Icon(Icons.lock_rounded),
             tooltip: 'Kunci Kembali',
             onPressed: () {
-              setState(() {
-                _isUnlocked = false;
-                _pin = '';
-              });
+              _lock();
               AppSnackBar.showInfo(context, 'Akses rekam medis telah dikunci');
             },
           ),
@@ -151,7 +225,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
             onPressed: () {
               AppSnackBar.showSuccess(
                 context,
-                'Mengunduh resume medis PDF terenkripsi...',
+                'Simulasi: ekspor PDF belum tersedia.',
               );
             },
           ),
@@ -220,7 +294,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
                     SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        'Data rekam medis terlindungi UU PDP & standar kerahasiaan medis Permenkes No. 24 Tahun 2022.',
+                        'Prototipe M01: data sintetis dalam memori, belum untuk pelayanan pasien nyata.',
                         style: TextStyle(
                           fontSize: 11,
                           color: AppColors.textSecondary,
@@ -312,8 +386,10 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Akses Terenkripsi EMR Pasien',
+                Text(
+                  _hasPin
+                      ? 'Buka Rekam Medis dengan PIN'
+                      : 'Buat PIN Rekam Medis',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
@@ -321,8 +397,12 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
                   ),
                 ),
                 const SizedBox(height: 6),
-                const Text(
-                  'Masukkan 4 digit PIN keamanan Anda untuk membuka riwayat diagnosis dan resep obat.\n(PIN Demo: 1234)',
+                Text(
+                  _hasPin
+                      ? 'Masukkan PIN 4 digit. Setelah 5 kesalahan, akses ditunda 30 detik.'
+                      : _firstPin == null
+                      ? 'Buat PIN 4 digit untuk prototipe ini. Gunakan PIN uji, bukan PIN pribadi.'
+                      : 'Ulangi PIN untuk konfirmasi.',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 13,
@@ -331,6 +411,22 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
                   ),
                 ),
                 const SizedBox(height: 24),
+                if (_busy) const LinearProgressIndicator(),
+                if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: Semantics(
+                      liveRegion: true,
+                      child: Text(
+                        _error!,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: AppColors.danger,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
 
                 // PIN Indicators
                 Row(
@@ -372,14 +468,8 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         IconButton(
-                          onPressed: () {
-                            // Biometric simulation
-                            setState(() => _isUnlocked = true);
-                            AppSnackBar.showSuccess(
-                              context,
-                              'Biometrik Face/Fingerprint Terverifikasi',
-                            );
-                          },
+                          tooltip: 'Biometrik belum tersedia',
+                          onPressed: null,
                           icon: const Icon(
                             Icons.fingerprint_rounded,
                             size: 28,
@@ -388,6 +478,7 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
                         ),
                         _buildKeypadButton('0'),
                         IconButton(
+                          tooltip: 'Hapus digit PIN',
                           onPressed: _onBackspace,
                           icon: const Icon(
                             Icons.backspace_outlined,
@@ -415,24 +506,28 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
   }
 
   Widget _buildKeypadButton(String digit) {
-    return InkWell(
-      onTap: () => _onKeypadTap(digit),
-      borderRadius: BorderRadius.circular(36),
-      child: Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          color: AppColors.surfaceVariant,
-          shape: BoxShape.circle,
-          border: Border.all(color: AppColors.borderLight),
-        ),
-        child: Center(
-          child: Text(
-            digit,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-              color: AppColors.textPrimary,
+    return Semantics(
+      label: 'Digit $digit',
+      button: true,
+      child: InkWell(
+        onTap: _busy ? null : () => _onKeypadTap(digit),
+        borderRadius: BorderRadius.circular(36),
+        child: Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            color: AppColors.surfaceVariant,
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.borderLight),
+          ),
+          child: Center(
+            child: Text(
+              digit,
+              style: const TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
         ),
@@ -441,36 +536,10 @@ class _MedicalRecordPageState extends State<MedicalRecordPage> {
   }
 }
 
-class _MedicalRecordEntry {
-  const _MedicalRecordEntry({
-    required this.id,
-    required this.date,
-    required this.clinic,
-    required this.doctor,
-    required this.diagnosis,
-    required this.symptoms,
-    required this.vitalSigns,
-    required this.prescriptions,
-    required this.labResults,
-    required this.status,
-  });
-
-  final String id;
-  final String date;
-  final String clinic;
-  final String doctor;
-  final String diagnosis;
-  final String symptoms;
-  final String vitalSigns;
-  final List<String> prescriptions;
-  final String labResults;
-  final String status;
-}
-
 class _MedicalRecordCard extends StatelessWidget {
   const _MedicalRecordCard({required this.entry});
 
-  final _MedicalRecordEntry entry;
+  final MedicalRecord entry;
 
   @override
   Widget build(BuildContext context) {
@@ -614,7 +683,7 @@ class _MedicalRecordCard extends StatelessWidget {
                 onPressed: () {
                   AppSnackBar.showSuccess(
                     context,
-                    'Mengunduh resep & resume ${entry.id}.pdf',
+                    'Simulasi: ekspor PDF belum tersedia.',
                   );
                 },
                 icon: const Icon(

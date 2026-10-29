@@ -3,6 +3,8 @@
 
 Katalog ini memakai ID dari R1–R6. Milestone menunjukkan target pengerjaan, bukan status selesai. Tim memverifikasi implementasi dan menyimpan bukti di `evidence/` sebelum menandai kebutuhan terpenuhi.
 
+Baseline kode 29 Oktober 2026 mencakup secure storage, KDF/batas PIN, konfigurasi Android offline, dan build obfuscation. Lihat [hasil pemeriksaan](evidence/README.md) serta [panduan uji](../m01-security-testing.md). Pemenuhan SEC-01–SEC-10 masih mengikuti batas masing-masing: native storage/log, tinjauan anggota lain, backend/peran, dan enkripsi basis data belum seluruhnya teruji/tersedia.
+
 ## Privasi & UX (PRV-xx, UX-xx)
 
 | ID | Requirement | Sumber | Milestone |

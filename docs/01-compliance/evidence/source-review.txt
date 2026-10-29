@@ -1,0 +1,15 @@
+M01 source review after main sync, 2026-10-29
+Known-pattern scan only; not a guarantee that no secret exists.
+Values are omitted from this report.
+Working tree matches: 0
+Local Git history pattern classes matched: 0
+Tracked secret/signing filename matches: 0
+Ignore rules (six expected paths):
+.env
+.env.local
+android/key.properties
+test.jks
+test.keystore
+out/symbols/app.android-arm64.symbols
+lib print/debugPrint/debugPrintStack file matches: 0
+Historical main created default test PIN 1234; current startup no longer creates it. No real credential inferred from that test value.

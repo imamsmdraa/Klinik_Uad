@@ -1,0 +1,6 @@
+
+Algorithm : SHA256
+Hash      : 58FB320E3C09045493140C8EB9ED5082BE024153DD409436BFA9007B6D0F1A43
+Path      : D:\Coding\flutter\pemob\Klinik_Uad\build\app\outputs\flutter-apk\app-release.apk
+
+

@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
           onNavigateToTab: (index) => setState(() => _selectedIndex = index),
         ),
         const BookingPage(),
-        const MedicalRecordPage(),
+        MedicalRecordPage(active: _selectedIndex == 2),
         const MedicationReminderPage(),
         const ProfilePage(),
       ],

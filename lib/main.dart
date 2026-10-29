@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'config/app_theme.dart';
+import 'core/app_config.dart';
+import 'core/app_theme.dart';
 import 'routes/app_router.dart';
-import 'services/pin_service.dart';
-import 'services/secure_storage_service.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Set default PIN (1234) only if no PIN has been stored yet.
-  final storage = SecureStorageService();
-  final existingHash = await storage.getPinHash();
-  if (existingHash == null) {
-    await PinService().setupNewPin('1234');
-  }
+  AppConfig.validate();
   runApp(const ProviderScope(child: KlinikUadApp()));
 }
 
